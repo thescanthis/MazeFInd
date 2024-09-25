@@ -28,8 +28,8 @@ struct Pos
 
 	Pos operator+=(Pos& other)
 	{
-		y+= y + other.y;
-		x+= x + other.x;
+		y += other.y;
+		x += other.x;
 		return *this;
 	}
 
