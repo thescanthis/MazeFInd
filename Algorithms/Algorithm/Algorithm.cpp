@@ -12,14 +12,14 @@ struct Vertex
 
 vector<Vertex> vertices;
 vector<vector<int>> adjacent;
-vector<bool> visited;
+vector<bool> discovered;
 
 void CreateGraph()
 {
 	vertices.resize(6);
 	adjacent = vector <vector<int>>(6);
 
-	/* 인접 리스트
+	// 인접 리스트
 	adjacent[0].push_back(1);
 	adjacent[0].push_back(3);
 	adjacent[1].push_back(0);
@@ -27,8 +27,7 @@ void CreateGraph()
 	adjacent[1].push_back(3);
 	adjacent[3].push_back(4);
 	adjacent[5].push_back(4);
-	*/
-
+	/*
 	//인접 행렬
 	adjacent = vector<vector<int>>
 	{
@@ -39,44 +38,55 @@ void CreateGraph()
 		{0,0,0,0,0,0},
 		{0,0,0,0,1,0}
 	};
-}
-
-void DFS(int here)
-{
-	visited[here] = true;
-	cout << "Visited : " << here << endl;
-	
-	/*
-	for (int i = 0; i < adjacent[here].size(); i++)
-	{
-		int there = adjacent[here][i];
-
-		if (visited[there] == false)
-			DFS(there);
-	}
 	*/
-
-	for (int there = 0; there < 6; there++)
-	{
-		if (adjacent[here][there] == 0)
-			continue;
-
-		if (visited[there] == false)
-			DFS(there);
-	}
 }
 
-void DFSAll()
+void BFS(int here)
 {
-	for (int i = 0; i < 6; i++)
-		if (visited[i] == false)
-			DFS(i);
+	// 누구에 의해 발견 되었는가?
+	vector<int> parent(6, -1);
+	vector<int>distance(6, -1);
+
+	queue<int> q;
+	q.push(here);
+	discovered[here] = true;
+	
+	parent[here] = here;
+	distance[here] = 0;
+
+	while (!q.empty())
+	{
+		here = q.front();
+		q.pop();
+
+		cout << "Visited " << here << '\n';
+		for (auto there : adjacent[here])
+		{
+			if (discovered[there] == true)
+				continue;
+
+			q.push(there);
+			discovered[there] = true;
+
+			parent[there] = here;
+			distance[there] = distance[here] + 1;
+		}
+	}
+	int a = 0;
+}
+
+void BFSAll()
+{
+	for(int i=0; i<6; i++)
+	{
+		if(!discovered[i])
+			BFS(i);
+	}
 }
 
 int main()
 {
 	CreateGraph();
-	visited = vector<bool>(6, false);
-
-	DFSAll();
+	discovered = vector<bool>(6, false);
+	BFS(0);
 }
